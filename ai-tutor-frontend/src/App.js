@@ -22,9 +22,9 @@ function App() {
     setLoading(true);
 
     try {
-      const res = await axios.post("http://127.0.0.1:8000/api/orchestrate", {
-        user_message: userMessage,
-      });
+      const response = await axios.post("https://ai-orchestrator-backend.onrender.com/api/orchestrate", {
+      query: input,
+    });
 
       setChat([
         ...newChat,
