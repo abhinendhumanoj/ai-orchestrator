@@ -5,10 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 # Create FastAPI app
 app = FastAPI(title="AI Tutor Orchestrator", version="0.1.0")
 
-# ✅ Add CORS middleware so React frontend can call backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React runs on 3000
+    allow_origins=[
+        "http://localhost:3000",
+        "https://ai-tutor-frontend.onrender.com",  # future deployed frontend
+        "https://ai-tutor-frontend.vercel.app",    # optional
+        "*",  # temporary wildcard for testing
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
