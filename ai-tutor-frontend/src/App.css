@@ -1,0 +1,56 @@
+.App {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.chat-box {
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 400px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.user, .assistant {
+  margin: 5px 0;
+  max-width: 75%;
+  padding: 10px;
+  border-radius: 12px;
+}
+
+.user {
+  align-self: flex-end;
+  background: #0078ff;
+  color: white;
+}
+
+.assistant {
+  align-self: flex-start;
+  background: #e1ffc7;
+  color: black;
+}
+
+.typing {
+  font-style: italic;
+  color: gray;
+}
+
+.input-area {
+  display: flex;
+}
+
+.input-area input {
+  flex: 1;
+  padding: 10px;
+}
+
+.input-area button {
+  padding: 10px 15px;
+  margin-left: 5px;
+}
