@@ -8,13 +8,10 @@ function App() {
   ]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Automatically choose between local and deployed backend
-  const isLocal = window.location.hostname === "localhost";
-  const API_URL = isLocal
-    ? "http://127.0.0.1:8000/api/orchestrate"
-    : "https://ai-orchestrator-backend-ibmx.onrender.com/api/orchestrate";
+  // ✅ Hardcode backend for now (Render URL)
+  const API_URL = "https://ai-orchestrator-backend-ibmx.onrender.com/api/orchestrate";
 
-
+  // ✅ Send message to backend
   const sendMessage = async () => {
     if (!input.trim()) return;
 
@@ -24,10 +21,15 @@ function App() {
     setLoading(true);
 
     try {
-      // ✅ Send correct field expected by FastAPI
-      const response = await axios.post(API_URL, {
-        user_message: input,
-      });
+      const response = await axios.post(
+        API_URL,
+        { user_message: input },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const reply =
         response.data.answer ||
@@ -36,16 +38,23 @@ function App() {
 
       setMessages([...newMessages, { role: "assistant", text: reply }]);
     } catch (error) {
-      console.error("❌ Error connecting to backend:", error);
-      setMessages([
-        ...newMessages,
-        { role: "assistant", text: "⚠️ Error connecting to backend." },
-      ]);
+      console.error("❌ Backend connection error:", error);
+
+      let errorMsg = "⚠️ Error connecting to backend.";
+      if (error.response) {
+        errorMsg = `⚠️ Server responded with ${error.response.status}: ${error.response.statusText}`;
+      } else if (error.request) {
+        errorMsg =
+          "⚠️ Backend not reachable. Please check your network or backend URL.";
+      }
+
+      setMessages([...newMessages, { role: "assistant", text: errorMsg }]);
     } finally {
       setLoading(false);
     }
   };
 
+  // ✅ Send on Enter
   const handleKeyPress = (e) => {
     if (e.key === "Enter") sendMessage();
   };
