@@ -8,8 +8,11 @@ function App() {
   ]);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Use your deployed backend URL
-  const API_URL = "https://ai-orchestrator-backend-d6gk.onrender.com/api/orchestrate";
+  // ✅ Automatically choose between local and deployed backend
+  const isLocal = window.location.hostname === "localhost";
+  const API_URL = isLocal
+    ? "http://127.0.0.1:8000/api/orchestrate"
+    : "https://ai-orchestrator-backend-ibmx.onrender.com/api/orchestrate";
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -20,21 +23,17 @@ function App() {
     setLoading(true);
 
     try {
-      // ✅ Send correct field name expected by FastAPI: user_message
+      // ✅ Send correct field expected by FastAPI
       const response = await axios.post(API_URL, {
         user_message: input,
       });
 
-      // Extract the AI’s answer
       const reply =
         response.data.answer ||
         response.data.response ||
         "Sorry, I couldn’t get a reply from the AI.";
 
-      setMessages([
-        ...newMessages,
-        { role: "assistant", text: reply },
-      ]);
+      setMessages([...newMessages, { role: "assistant", text: reply }]);
     } catch (error) {
       console.error("❌ Error connecting to backend:", error);
       setMessages([
